@@ -12,9 +12,9 @@ Run `dotnet restore` and `dotnet build` - to install and download dependencies
 1. Navigate to the DicomMicroservice.Tests project
 2. Run `dotnet test`
 ### Notes
-SampleDcmFiles - contains sample Dicom files used by /extractAttribute endpoint.
-pathToUpload - Directory used by /upload endpoint to save the processed Dicom file
-ConvertedPngFiles - Directory used by /convertToPng endpoint to store the converted PNG files. 
-The same directories are used in the Nunit tests.
+- SampleDcmFiles - contains sample Dicom files used by /extractAttribute endpoint.
+- pathToUpload - Directory used by /upload endpoint to save the processed Dicom file
+- ConvertedPngFiles - Directory used by /convertToPng endpoint to store the converted PNG files. 
+- The same directories are used in the Nunit tests.
 
 
