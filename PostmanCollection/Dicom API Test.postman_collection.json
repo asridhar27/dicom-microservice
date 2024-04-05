@@ -1,0 +1,436 @@
+{
+	"info": {
+		"_postman_id": "aef1aecb-7e04-45af-83e9-d0d511133ecf",
+		"name": "Dicom API Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6961082"
+	},
+	"item": [
+		{
+			"name": "Extract DICOM attribute based on DICOM Tag",
+			"item": [
+				{
+					"name": "Extract DICOM attribute",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response body is an array\", function () {",
+									"    pm.expect(responseBody).to.be.an(\"array\");",
+									"});",
+									"",
+									"pm.test(\"Items in the array are strings\", function () {",
+									"    responseBody.forEach(function(item) {",
+									"        pm.expect(item).to.be.a(\"string\");",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5113/api/Dicom/extractAttribute?dicomTag=00100010&fileName=IM000001.dcm",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5113",
+							"path": [
+								"api",
+								"Dicom",
+								"extractAttribute"
+							],
+							"query": [
+								{
+									"key": "dicomTag",
+									"value": "00100010"
+								},
+								{
+									"key": "fileName",
+									"value": "IM000001.dcm"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Dicom Tag",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});",
+									"",
+									"pm.test(\"Response body contains 'Invalid Dicom Tag'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Invalid Filename or Dicom Tag\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5113/api/Dicom/extractAttribute?dicomTag=ggkmkgm&fileName=IM000001.dcm",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5113",
+							"path": [
+								"api",
+								"Dicom",
+								"extractAttribute"
+							],
+							"query": [
+								{
+									"key": "dicomTag",
+									"value": "ggkmkgm"
+								},
+								{
+									"key": "fileName",
+									"value": "IM000001.dcm"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid FileName",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});",
+									"",
+									"pm.test(\"Response body contains 'Invalid Filename'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Invalid Filename or Dicom Tag\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5113/api/Dicom/extractAttribute?dicomTag=00100010&fileName=IM000001",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5113",
+							"path": [
+								"api",
+								"Dicom",
+								"extractAttribute"
+							],
+							"query": [
+								{
+									"key": "dicomTag",
+									"value": "00100010"
+								},
+								{
+									"key": "fileName",
+									"value": "IM000001"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Accept and Store uploaded DICOM file",
+			"item": [
+				{
+					"name": "Upload DICOM file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.text();",
+									"",
+									"function isGUID(str) {",
+									"    var regex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;",
+									"    return regex.test(str);",
+									"}",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is a valid GUID\", function () {",
+									"    pm.expect(isGUID(responseBody)).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5113/api/Dicom/uploadDicom",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5113",
+							"path": [
+								"api",
+								"Dicom",
+								"uploadDicom"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Without Dicom input file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.json();",
+									"",
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response body contains 'The file field is required.'\", function () {",
+									"    pm.expect(responseBody.errors.file[0]).to.eql(\"The file field is required.\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost:5113/api/Dicom/uploadDicom",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5113",
+							"path": [
+								"api",
+								"Dicom",
+								"uploadDicom"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Dicom file",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});",
+									"",
+									"pm.test(\"Response body contains 'Error processing DICOM file'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Error processing DICOM file\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5113/api/Dicom/uploadDicom",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5113",
+							"path": [
+								"api",
+								"Dicom",
+								"uploadDicom"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Convert DICOM to PNG",
+			"item": [
+				{
+					"name": "Convert to PNG",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var responseBody = pm.response.text();",
+									"",
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response filename has '.png' extension\", function () {",
+									"    pm.expect(responseBody.endsWith('.png')).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dicomFile",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5113/api/Dicom/convertToPng",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5113",
+							"path": [
+								"api",
+								"Dicom",
+								"convertToPng"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Invalid Dicom File",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500\", function () {",
+									"    pm.response.to.have.status(500);",
+									"});",
+									"",
+									"pm.test(\"Response body contains 'Failed to open DICOM filee'\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Failed to open DICOM file\");",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "dicomFile",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5113/api/Dicom/convertToPng",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5113",
+							"path": [
+								"api",
+								"Dicom",
+								"convertToPng"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
