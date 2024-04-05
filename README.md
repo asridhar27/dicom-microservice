@@ -2,7 +2,7 @@
 ## Installation: (Requires .Net core 6.0)
 Run `dotnet restore` and `dotnet build` to install and download dependencies
 ## Running the application: 
-1.Navigate to DicomMicroservice project and run `dotnet restore` , `dotnet build`
+1. Navigate to DicomMicroservice project and run `dotnet restore` , `dotnet build`
 2. Start the application by running `dotnet run` from the root directory:
  /DicomMicroservice
 3. Open link http://localhost:5113/swagger/index.html to access the swagger API documentation
