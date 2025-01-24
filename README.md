@@ -1,4 +1,3 @@
-# PocketHealth assessment
 ## Installation: (Requires .Net core 6.0)
 Run `dotnet restore` and `dotnet build` to install and download dependencies
 ## Running the application: 
